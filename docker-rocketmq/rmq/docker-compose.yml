@@ -1,0 +1,76 @@
+version: '3.5'
+
+services:
+  rmqnamesrv:
+    image: foxiswho/rocketmq:4.7.0
+    container_name: rmqnamesrv
+    ports:
+      - 9876:9876
+    volumes:
+      - ./rmqs/logs:/opt/logs
+      - ./rmqs/store:/opt/store
+    environment:
+      JAVA_OPT_EXT: "-Duser.home=/opt -Xms512M -Xmx512M -Xmn128m"
+    command: ["sh","mqnamesrv"]
+
+  rmqbroker0:
+    image: foxiswho/rocketmq:4.7.0
+    container_name: rmqbroker0
+    ports:
+      - 30911:30911
+      - 40911:40911
+    volumes:
+      - ./rmq0/logs:/opt/logs
+      - ./rmq0/store:/opt/store
+#      - ./rmq/brokerconf/broker.conf:/etc/rocketmq/broker.conf
+      - ./rmq/dledger/broker-n0.conf:/etc/rocketmq/broker.conf
+    environment:
+        JAVA_OPT_EXT: "-Duser.home=/opt -Xms512M -Xmx512M -Xmn128m"
+    command: ["sh","mqbroker","-c","/etc/rocketmq/broker.conf","-n","10.1.6.127:9876","autoCreateTopicEnable=true"]
+    depends_on:
+      - rmqnamesrv
+
+
+  rmqbroker1:
+    image: foxiswho/rocketmq:4.7.0
+    container_name: rmqbroker1
+    ports:
+      - 30912:30912
+      - 40912:40912
+    volumes:
+      - ./rmq1/logs:/opt/logs
+      - ./rmq1/store:/opt/store
+      - ./rmq/dledger/broker-n1.conf:/etc/rocketmq/broker.conf
+    environment:
+      JAVA_OPT_EXT: "-Duser.home=/opt -Xms512M -Xmx512M -Xmn128m"
+    command: ["sh","mqbroker","-c","/etc/rocketmq/broker.conf","-n","10.1.6.127:9876","autoCreateTopicEnable=true"]
+    depends_on:
+      - rmqnamesrv
+
+
+  rmqbroker2:
+    image: foxiswho/rocketmq:4.7.0
+    container_name: rmqbroker2
+    ports:
+      - 30913:30913
+      - 40913:40913
+    volumes:
+      - ./rmq2/logs:/opt/logs
+      - ./rmq2/store:/opt/store
+      - ./rmq/dledger/broker-n2.conf:/etc/rocketmq/broker.conf
+    environment:
+      JAVA_OPT_EXT: "-Duser.home=/opt -Xms512M -Xmx512M -Xmn128m"
+    command: ["sh","mqbroker","-c","/etc/rocketmq/broker.conf","-n","10.1.6.127:9876","autoCreateTopicEnable=true"]
+    depends_on:
+      - rmqnamesrv
+
+
+  rmqconsole:
+    image: styletang/rocketmq-console-ng
+    container_name: rmqconsole
+    ports:
+      - 8180:8080
+    environment:
+        JAVA_OPTS: "-Drocketmq.namesrv.addr=10.1.6.127:9876 -Dcom.rocketmq.sendMessageWithVIPChannel=false"
+    depends_on:
+      - rmqnamesrv
