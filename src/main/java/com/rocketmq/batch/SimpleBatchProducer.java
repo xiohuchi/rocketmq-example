@@ -13,8 +13,9 @@ import java.util.List;
  */
 public class SimpleBatchProducer {
     public static void main(String[] args) throws Exception {
-        DefaultMQProducer producer = new DefaultMQProducer("BatchProducerGroupName");
-        producer.setNamesrvAddr("10.1.6.127:9876");
+        DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
+        producer.setNamesrvAddr("106.52.208.123:9876");
+        producer.setVipChannelEnabled(false);
         producer.start();
 
         //If you just send messages of no more than 1MiB at a time, it is easy to use batch

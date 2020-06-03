@@ -18,10 +18,11 @@ public class SyncProducer {
         //Instantiate with a producer group name.
         DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
         // Specify name server addresses.
-        producer.setNamesrvAddr("10.1.6.127:9876");
+        producer.setNamesrvAddr("106.52.208.123:9876");
+        producer.setVipChannelEnabled(false);
         //Launch the instance.
         producer.start();
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 100; i++) {
             //Create a message instance, specifying topic, tag and message body.
             Message msg = new Message("TopicTest" /* Topic */,
                     "TagA" /* Tag */,

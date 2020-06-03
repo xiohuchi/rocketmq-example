@@ -19,7 +19,8 @@ public class AsyncProducer {
         //Instantiate with a producer group name.
         DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
         // Specify name server addresses.
-        producer.setNamesrvAddr("10.1.6.127:9876");
+        producer.setNamesrvAddr("106.52.208.123:9876");
+        producer.setVipChannelEnabled(false);
         //Launch the instance.
         producer.start();
         producer.setRetryTimesWhenSendAsyncFailed(0);
